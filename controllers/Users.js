@@ -29,6 +29,7 @@ export const register = async (req , res) =>{
 
 
 //login
+
 export const login = async (req , res) =>{
   try{
   const {email} = req.body; 
@@ -59,4 +60,69 @@ export const login = async (req , res) =>{
     res.status(500).json({message : error.message});
   }
 }
+
+//find all users
+
+export const getUsres =  async (req, res) => {
+  const query = req.query.new;
+  try {
+    const users = query
+      ? await User.find().sort({ _id: -1 }).limit(5)
+      : await User.find();
+    res.status(200).json(users);
+  } catch (error) {
+    res.status(500).json({message : error.message});
+  }
+};
+
+
+// delete utilisateur 
+
+export const deleteUser  = async (req , res) =>{
+
+  const id = req.params.id;
+try{
+
+await User.findByIdAndDelete(id);
+res.status(200).json({message : "utilisateur supprimer"});
+
+
+
+}catch(error){
+  res.status(500).json({message : error.message});
+}
+}
+
+// get user 
+
+export const getUser = async (req , res)=>{
+  const id= req.params.id;
+
+  try{
+  const user = await User.findById(id);
+  res.status(200).json(user);
+  }catch(error){
+    res.status(500).json({message : error.message});
+  }
+}
+
+//update user 
+
+export const updateUser = async(req , res)=>{
+  try{
+    const updatedUser = await User.findByIdAndUpdate(
+      req.params.id,
+      {
+        $set: req.body,
+      },
+      { new: true }
+    );
+    res.status(200).json(updatedUser);
+
+  }catch(error){
+    res.status(500).json({message : error.message});
+  }
+}
+
+
 
