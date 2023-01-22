@@ -5,8 +5,9 @@ import jwt from "jsonwebtoken";
 
 //register
 export const register = async (req , res) =>{
+  try {
     const {name,email,password} = req.body;
-    let user = await User.findOne({email}) ;
+    const user = await User.findOne({email}) ;
     if(user) res.status(400).json({message : "Email Deja existe"});
     
     const newUser = new User({
@@ -16,10 +17,7 @@ export const register = async (req , res) =>{
           password,
           "aazzee"
         ).toString(),
-      });
-    
-      try {
-     
+      });    
         const savedUser = await newUser.save();
         res.status(201).json(savedUser);
       } catch (err) {
@@ -54,11 +52,23 @@ export const login = async (req , res) =>{
 },"YSF",{expiresIn : "5d"});
 
     const {password , ...autre} = user._doc;
-    res.status(200).json({...autre , accessToken});
+    // res.status(200).json({...autre , accessToken});
+
+    res.cookie("token", accessToken , {httpOnly: true,}).status(200).json(autre);
   
-  } catch(error){
+  
+  }catch(error){
     res.status(500).json({message : error.message});
   }
+}
+
+
+//logout 
+
+export const logout = (req , res) =>{
+  res.clearCookie("token" , {
+    secure : true , 
+    sameSite : "none"}).status(200).json({message : "logout"});
 }
 
 //find all users
