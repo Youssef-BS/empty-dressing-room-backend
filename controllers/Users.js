@@ -1,18 +1,33 @@
 import { User } from "../models/users.js";
 import CryptoJS from "crypto-js"
 import jwt from "jsonwebtoken";
+import cloudinary from "cloudinary";
+import fs from "fs";
 
 
 //register
 export const register = async (req , res) =>{
   try {
     const {name,email,password} = req.body;
+    const avatar = req.files.avatar.tempFilePath;
+   
+   
     const user = await User.findOne({email}) ;
     if(user) res.status(400).json({message : "Email Deja existe"});
+
+    const mycloud =  await cloudinary.v2.uploader.upload(avatar , {
+      folder : "todoApp"
+  });
+  
+  fs.rmSync("./tmp" , {recursive : true});
     
     const newUser = new User({
         name,
         email,
+        avatar :{
+          public_id : mycloud.public_id,
+          url: mycloud.secure_url,
+        },
         password :  CryptoJS.AES.encrypt(
           password,
           "aazzee"
@@ -20,8 +35,8 @@ export const register = async (req , res) =>{
       });    
         const savedUser = await newUser.save();
         res.status(201).json(savedUser);
-      } catch (err) {
-        res.status(500).json(err);
+      } catch (error) {
+        res.status(500).json({message:error.message});
       }
 }
 
@@ -132,6 +147,11 @@ export const updateUser = async(req , res)=>{
   }catch(error){
     res.status(500).json({message : error.message});
   }
+}
+
+export const test = (req,res)=>{
+  console.log('test')
+  res.send('aaa');
 }
 
 
