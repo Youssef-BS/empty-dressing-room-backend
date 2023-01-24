@@ -9,13 +9,13 @@ import fs from "fs";
 export const register = async (req , res) =>{
   try {
     const {name,email,password} = req.body;
-    const avatar = req.files.avatar.tempFilePath;
+    const photoP = req.files.photoP.tempFilePath;
    
    
     const user = await User.findOne({email}) ;
     if(user) res.status(400).json({message : "Email Deja existe"});
 
-    const mycloud =  await cloudinary.v2.uploader.upload(avatar , {
+    const mycloud =  await cloudinary.v2.uploader.upload(photoP , {
       folder : "todoApp"
   });
   
@@ -24,10 +24,11 @@ export const register = async (req , res) =>{
     const newUser = new User({
         name,
         email,
-        avatar :{
+        photoP :{
           public_id : mycloud.public_id,
           url: mycloud.secure_url,
         },
+        
         password :  CryptoJS.AES.encrypt(
           password,
           "aazzee"
@@ -40,6 +41,10 @@ export const register = async (req , res) =>{
       }
 }
 
+// app.post("/api/upload", upload.single("file"), (req, res) => {
+//   const file = req.file;
+//   res.status(200).json(file.filename);
+// });
 
 //login
 
@@ -149,10 +154,7 @@ export const updateUser = async(req , res)=>{
   }
 }
 
-export const test = (req,res)=>{
-  console.log('test')
-  res.send('aaa');
-}
+
 
 
 
