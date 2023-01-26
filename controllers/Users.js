@@ -1,11 +1,11 @@
 import { User } from "../models/users.js";
 import CryptoJS from "crypto-js"
-import jwt from "jsonwebtoken";
+import { sendToken } from "../middleware/sendToken.js";
 import cloudinary from "cloudinary";
 import fs from "fs";
 
 
-//register
+//register User
 export const register = async (req , res) =>{
   try {
     const {name,email,password} = req.body;
@@ -25,7 +25,6 @@ export const register = async (req , res) =>{
         name,
         email,
         photoP :{
-          public_id : mycloud.public_id,
           url: mycloud.secure_url,
         },
         
@@ -46,7 +45,7 @@ export const register = async (req , res) =>{
 //   res.status(200).json(file.filename);
 // });
 
-//login
+//login User with token and cookies
 
 export const login = async (req , res) =>{
   try{
@@ -65,16 +64,7 @@ export const login = async (req , res) =>{
     res.status(401).json("Wrong credentials!");
 
 
-    const accessToken = jwt.sign({
-      id : user._id,
-      name : user.name,
-      admin : user.isAdmin,
-},"YSF",{expiresIn : "5d"});
-
-    const {password , ...autre} = user._doc;
-    // res.status(200).json({...autre , accessToken});
-
-    res.cookie("token", accessToken , {httpOnly: true,}).status(200).json(autre);
+    sendToken(res, user, 200, "Login Successful");
   
   
   }catch(error){
@@ -106,7 +96,7 @@ export const getUsres =  async (req, res) => {
 };
 
 
-// delete utilisateur 
+// delete users 
 
 export const deleteUser  = async (req , res) =>{
 
@@ -150,6 +140,34 @@ export const updateUser = async(req , res)=>{
     res.status(200).json(updatedUser);
 
   }catch(error){
+    res.status(500).json({message : error.message});
+  }
+}
+
+//add user product
+
+export const addProduct = async (req , res)=>{
+  try{
+
+    const {titre , description , categories , taille , marque , prix ,createdAt ,  photoProduit} = req.body;
+    const user = await User.findById(req.user._id);
+
+    user.produits.push({
+      titre , 
+      description,
+      categories,
+      taille,
+      marque,
+      prix,
+      createdAt: new Date(Date.now()),
+      photoProduit,
+  })
+
+  await user.save();
+
+  res.status(200).json({message : "produit added successfully"});
+
+}catch(error){
     res.status(500).json({message : error.message});
   }
 }

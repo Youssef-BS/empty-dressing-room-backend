@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import jwt from "jsonwebtoken";
 
 const userSchema = new mongoose.Schema({
     name :{
@@ -17,7 +18,6 @@ const userSchema = new mongoose.Schema({
        },
        
     photoP : {
-        public_id:String,
         url : String 
     },
     produits : [ 
@@ -29,7 +29,6 @@ const userSchema = new mongoose.Schema({
       marque : String,
       prix : Number,
       createdAt : Date,
-       
         photoProduit : {
         public_id:String,
         url : String, 
@@ -41,5 +40,12 @@ const userSchema = new mongoose.Schema({
       
 })
 
+
+userSchema.methods.getJWTToken = function () {
+    return  jwt.sign({
+        _id : this._id,
+        admin : this.isAdmin,
+  },"YSF",{expiresIn : "5d"});
+  };
 
 export const User = mongoose.model("User" , userSchema);
