@@ -177,7 +177,7 @@ export const addProduct = async (req , res)=>{
 export const getUserProduct = async (req , res) =>{
 try {
     const userProduits = await User.findById(req.params.id);
-    res.status(200).json(userProduits.produits);
+    res.status(200).json({produit:userProduits.produits});
   } catch (error) {
     res.status(500).json({message : error.message});
   }
