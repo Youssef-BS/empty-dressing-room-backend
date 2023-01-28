@@ -24,19 +24,14 @@ const ProduitSchema = new mongoose.Schema({
         required : true,
        },
        
-    photoPrpduit : {
-        url : String 
-    },
+  
 
 
     etat : {
         type : Boolean,
         default : false,
     }
-      
-
-    
-   
+         
 
 },
 { timestamps: true }

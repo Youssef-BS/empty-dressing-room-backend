@@ -24,4 +24,4 @@ app.use(
 
 
 app.use("/api/users" , User);
-app.use("/api/prouits" , Produit)
+app.use("/api/produits" , Produit);
