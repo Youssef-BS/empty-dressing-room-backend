@@ -1,8 +1,10 @@
 import  express  from "express";
 import User from "./routers/User.js";
+import  Produit  from "./routers/Produit.js";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import fileUpload from "express-fileupload";
+
 export const app = express();
 
 
@@ -22,3 +24,4 @@ app.use(
 
 
 app.use("/api/users" , User);
+app.use("/api/prouits" , Produit)

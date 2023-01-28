@@ -1,7 +1,7 @@
 import express from "express";
 
-import {addProduct, deleteUser, getUser, getUserProduct, getUsres, login, logout, register, updateUser} from "../controllers/Users.js"
-import { isAuthenticated } from "../middleware/verifyToken.js";
+import { deleteUser, getUser, getUsres, login, logout, register, updateUser} from "../controllers/Users.js"
+
 
 const router = express.Router();
 
@@ -12,8 +12,7 @@ router.route("/").get(getUsres);
 router.route("/:id").delete(deleteUser);
 router.route("/:id").get(getUser);
 router.route("/:id").put(updateUser);
-router.route("/newproduit").post(isAuthenticated ,  addProduct);
-router.route("/produitsUsers/:id").get(getUserProduct);
+
 
 
 export default router ; 

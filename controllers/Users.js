@@ -144,44 +144,8 @@ export const updateUser = async(req , res)=>{
   }
 }
 
-//add user product
 
-export const addProduct = async (req , res)=>{
-  try{
 
-    const {titre , description , categories , taille , marque , prix ,createdAt ,  photoProduit} = req.body;
-    const user = await User.findById(req.user._id);
-
-    user.produits.push({
-      titre , 
-      description,
-      categories,
-      taille,
-      marque,
-      prix,
-      createdAt: new Date(Date.now()),
-      photoProduit,
-  })
-
-  await user.save();
-
-  res.status(200).json({message : "produit added successfully"});
-
-}catch(error){
-    res.status(500).json({message : error.message});
-  }
-}
-
-// get user Product 
-
-export const getUserProduct = async (req , res) =>{
-try {
-    const userProduits = await User.findById(req.params.id);
-    res.status(200).json({produit:userProduits.produits});
-  } catch (error) {
-    res.status(500).json({message : error.message});
-  }
-}
 
 
 

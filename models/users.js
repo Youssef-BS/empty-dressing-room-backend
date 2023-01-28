@@ -20,25 +20,16 @@ const userSchema = new mongoose.Schema({
     photoP : {
         url : String 
     },
-    produits : [ 
-        {
-      titre: String,
-      description : String,
-      categories : String,
-      taille : String,
-      marque : String,
-      prix : Number,
-      createdAt : Date,
-        photoProduit : {
-        public_id:String,
-        url : String, 
-    }}],
+
+    produit:[String],
+
     isAdmin : {
         type : Boolean,
         default : false,
     }
       
-})
+}
+)
 
 
 userSchema.methods.getJWTToken = function () {
