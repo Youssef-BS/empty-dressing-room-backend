@@ -3,7 +3,7 @@ import { addProduct } from "../controllers/Produits.js";
 
 const router = express.Router();
 
-router.route("/addproduct").post(addProduct);
+router.route("/addproduct/:id").post(addProduct);
 
 
 export default router;

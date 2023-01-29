@@ -23,11 +23,7 @@ const ProduitSchema = new mongoose.Schema({
         type : Number,
         required : true,
        },
-       
-  
-
-
-    etat : {
+       etat : {
         type : Boolean,
         default : false,
     }

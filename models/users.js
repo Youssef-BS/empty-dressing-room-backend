@@ -9,7 +9,9 @@ const userSchema = new mongoose.Schema({
        email : {
         type : String , 
         required : true , 
-        unique : true
+        unique : true,
+        index:true, 
+        sparse:true
        },
        password : {
          type : String,
@@ -21,7 +23,9 @@ const userSchema = new mongoose.Schema({
         url : String 
     },
 
-    produit:[String],
+    produit:{
+       type : [String]
+    },
 
     isAdmin : {
         type : Boolean,
