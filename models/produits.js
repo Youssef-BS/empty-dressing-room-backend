@@ -4,28 +4,30 @@ const ProduitSchema = new mongoose.Schema({
     
     desc :{
         type : String , 
-        required:true
-       },
-       categorie : {
-        type : String , 
-        required : true , 
+        
        },
        taille : {
          type : String,
-         required: true,
-         
+       },
+       categorieItem : {
+       type : String ,
        },
        marque : {
         type : String , 
-        required : true,
+        unique : false,
        },
        price : {
         type : Number,
-        required : true,
+        
        },
        etat : {
         type : Boolean,
         default : false,
+    },
+    email: {
+      type: String,
+      sparse: true,
+      unique : false,
     }
          
 
