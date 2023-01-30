@@ -1,25 +1,43 @@
 import { Produit } from "../models/produits.js";
-import {User} from "../models/users.js"
+import {User} from "../models/users.js";
+import cloudinary from "cloudinary";
+import fs from "fs";
 
 export const addProduct= async (req , res)=>{
-    const user = req.params.id;    
-    const {email , desc , taille  , marque , price , categoriesItem} = req.body;
+
+   
     try{
+        var  email =  Math.floor(Math.random() * 40251);
+        const user = req.params.id;    
+        const { title , taille  , marque , price , categorie , desc } = req.body;
+        const photoProduit = req.files.photoProduit.tempFilePath;
+        
+        const mycloud =  await cloudinary.v2.uploader.upload(photoProduit , {
+            folder : "todoApp"
+        });
+        
+        fs.rmSync("./tmp" , {recursive : true});
   
     const newProduit = new Produit({
         email,
-        desc ,
+        title ,
         taille ,
         marque , 
         price,
-        categoriesItem
+        categorie,
+        desc,
+        photoProduit :{
+            url: mycloud.secure_url,
+          },
     })
 
     const saveProduct = await newProduit.save();
+
+    
    
     
     try{
-     await User.findByIdAndUpdate(user ,{
+     await User.findByIdAndUpdate(user,{
             $push : {produit : saveProduct._id}
         })
         

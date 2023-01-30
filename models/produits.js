@@ -1,38 +1,41 @@
 import mongoose from "mongoose";
-
-const ProduitSchema = new mongoose.Schema({
-    
-    desc :{
-        type : String , 
-        
-       },
-       taille : {
-         type : String,
-       },
-       categorieItem : {
-       type : String ,
-       },
-       marque : {
-        type : String , 
-        unique : false,
-       },
-       price : {
-        type : Number,
-        
-       },
-       etat : {
-        type : Boolean,
-        default : false,
+const ProduitSchema = new mongoose.Schema(
+  {
+    email : {
+      type : Number , 
+      default :1,
+       
     },
-    email: {
+    title: {
       type: String,
-      sparse: true,
-      unique : false,
-    }
-         
-
-},
-{ timestamps: true }
-)
+      required: true,
+    },
+    price: {
+      type: Number,
+      required: true,
+    },
+    categorie: {
+      type: String,
+      required: true,
+      index : false,
+    },
+    desc: {
+      type: String,
+      required: true,
+    },
+    photoProduit : {
+      url : String 
+  },
+  taille : {
+    type : String , 
+    required : true,
+  },
+  marque : {
+    type :String , 
+    required : true , 
+  }
+  },
+  { timestamps: true }
+);
 
 export const Produit = mongoose.model("Produit" , ProduitSchema);
