@@ -54,18 +54,35 @@ export const addProduct= async (req , res)=>{
 export const getAllProduct = async (req , res) =>{
   
     try {
-        const users = await User.find();
-        const productIds = users.map(user => user.produit);
+        const users = await User.find({}, { name: 1, photoP: 1, produit: 1 });
         const products = await Promise.all(
-            productIds.map(id => Produit.findById(id))
+          users.map(user => {
+            return Promise.all(
+              user.produit.map(id => Produit.findById(id))
+            ).then(userProducts => {
+              return userProducts.map(product => ({
+                name: user.name,
+                photoP: user.photoP,
+                produit: product
+              }));
+            });
+          })
         );
-        res.status(200).json(products);
-    } catch (error) {
+        const flatProducts = products.reduce((acc, val) => acc.concat(val), []);
+    
+        for (let i = flatProducts.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [flatProducts[i], flatProducts[j]] = [flatProducts[j], flatProducts[i]];
+        }
+    
+        res.status(200).json(flatProducts);
+      } catch (error) {
         res.status(500).json({ message: error.message });
-    }
+      }
+    
+
 
 }
-
 
 export const getProductUser = async(req , res) =>{
 
