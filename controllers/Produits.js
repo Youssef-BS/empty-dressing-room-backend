@@ -101,6 +101,176 @@ export const getProductUser = async(req , res) =>{
     }
 }
 
+export const getProductMen = async (req , res)=>{
+  try {
+    const users = await User.find({}, { name: 1, photoP: 1, produit: 1 , categorie:1});
+    const products = await Promise.all(
+      users.map(user => {
+        return Promise.all(
+          user.produit.map(id => Produit.findById(id))
+        ).then(userProducts => {
+          return userProducts.map(product => ({
+            name: user.name,
+            photoP: user.photoP,
+            produit: product,
+            categorie : product.categorie.split(" ")[0],
+          
+          }));
+        });
+      })
+    );
+    const flatProducts = products.reduce((acc, val) => acc.concat(val), []);
+    const filteredProducts = flatProducts.filter(product => product.categorie === "hommes");
+
+    for (let i = filteredProducts.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [filteredProducts[i], filteredProducts[j]] = [filteredProducts[j], filteredProducts[i]];
+    }
+    
+    res.status(200).json(filteredProducts);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+
+}
+
+export const getProductWomen = async (req , res)=>{
+  try {
+    const users = await User.find({}, { name: 1, photoP: 1, produit: 1 , categorie:1});
+    const products = await Promise.all(
+      users.map(user => {
+        return Promise.all(
+          user.produit.map(id => Produit.findById(id))
+        ).then(userProducts => {
+          return userProducts.map(product => ({
+            name: user.name,
+            photoP: user.photoP,
+            produit: product,
+            categorie : product.categorie.split(" ")[0],
+          
+          }));
+        });
+      })
+    );
+    const flatProducts = products.reduce((acc, val) => acc.concat(val), []);
+    const filteredProducts = flatProducts.filter(product => product.categorie === "femmes");
+
+    for (let i = filteredProducts.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [filteredProducts[i], filteredProducts[j]] = [filteredProducts[j], filteredProducts[i]];
+    }
+    
+    res.status(200).json(filteredProducts);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+
+}
+
+export const getProductKids = async (req , res)=>{
+  try {
+    const users = await User.find({}, { name: 1, photoP: 1, produit: 1 , categorie:1});
+    const products = await Promise.all(
+      users.map(user => {
+        return Promise.all(
+          user.produit.map(id => Produit.findById(id))
+        ).then(userProducts => {
+          return userProducts.map(product => ({
+            name: user.name,
+            photoP: user.photoP,
+            produit: product,
+            categorie : product.categorie.split(" ")[0],
+          
+          }));
+        });
+      })
+    );
+    const flatProducts = products.reduce((acc, val) => acc.concat(val), []);
+    const filteredProducts = flatProducts.filter(product => product.categorie === "enfants");
+
+    for (let i = filteredProducts.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [filteredProducts[i], filteredProducts[j]] = [filteredProducts[j], filteredProducts[i]];
+    }
+    
+    res.status(200).json(filteredProducts);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+
+}
+
+export const getProductElectronique = async (req , res)=>{
+  try {
+    const users = await User.find({}, { name: 1, photoP: 1, produit: 1 , categorie:1});
+    const products = await Promise.all(
+      users.map(user => {
+        return Promise.all(
+          user.produit.map(id => Produit.findById(id))
+        ).then(userProducts => {
+          return userProducts.map(product => ({
+            name: user.name,
+            photoP: user.photoP,
+            produit: product,
+            categorie : product.categorie.split(" ")[0],
+          
+          }));
+        });
+      })
+    );
+    const flatProducts = products.reduce((acc, val) => acc.concat(val), []);
+    const filteredProducts = flatProducts.filter(product => product.categorie === "electroniques");
+
+    for (let i = filteredProducts.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [filteredProducts[i], filteredProducts[j]] = [filteredProducts[j], filteredProducts[i]];
+    }
+    
+    res.status(200).json(filteredProducts);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+
+}
+
+
+export const getProductHome = async (req , res)=>{
+  try {
+    const users = await User.find({}, { name: 1, photoP: 1, produit: 1 , categorie:1});
+    const products = await Promise.all(
+      users.map(user => {
+        return Promise.all(
+          user.produit.map(id => Produit.findById(id))
+        ).then(userProducts => {
+          return userProducts.map(product => ({
+            name: user.name,
+            photoP: user.photoP,
+            produit: product,
+            categorie : product.categorie.split(" ")[0],
+          
+          }));
+        });
+      })
+    );
+    const flatProducts = products.reduce((acc, val) => acc.concat(val), []);
+    const filteredProducts = flatProducts.filter(product => product.categorie === "maison");
+
+    for (let i = filteredProducts.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [filteredProducts[i], filteredProducts[j]] = [filteredProducts[j], filteredProducts[i]];
+    }
+    
+    res.status(200).json(filteredProducts);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+
+}
+
+
+
+
+
 
 
 
