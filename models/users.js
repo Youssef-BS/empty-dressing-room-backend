@@ -24,6 +24,10 @@ const userSchema = new mongoose.Schema({
        type : [String]
     },
 
+    msg : {
+        type : [String]
+    },
+
     isAdmin : {
         type : Boolean,
         default : false,
