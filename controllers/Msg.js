@@ -17,10 +17,10 @@ try{
 
     try{
     await User.findByIdAndUpdate(user , {
-        $push : {msg : messageEnvoyer._id}
+        $push : {msg : messageEnvoyer._id+" "+user}
     })
     await User.findByIdAndUpdate(to , {
-        $push : {msg : messageEnvoyer._id}
+        $push : {msg : messageEnvoyer._id+" "+user}
     })
    
     }catch(error){
