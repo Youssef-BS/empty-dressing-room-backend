@@ -58,7 +58,7 @@ const list3 = []
             }
         }
         }
-        res.status(500).json(list3)
+        res.status(200).json(list3)
         
         }catch(error){
         res.status(500).json({message : error.message})

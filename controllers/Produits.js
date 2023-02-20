@@ -321,6 +321,25 @@ export const selectProduct = async (req , res) =>{
 }
 
 
+export const myProduits =async (req , res) =>{
+  try{
+  const Me =  req.params.id ; 
+  const product = req.params.idproduct;
+ 
+  const user = await User.findById(Me);
+  for(let i =0 ; i<user.produit.length ; i++){
+   if(user.produit[i]===product){
+    res.status(200).json({message : true})
+   }else {
+    res.status(200).json({message : false})
+   }
+  }
+}catch(error){
+  res.status(500).json({message : error.message})
+}
+
+}
+
 
 
 
