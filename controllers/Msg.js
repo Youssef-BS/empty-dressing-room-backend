@@ -1,10 +1,12 @@
 import { User } from "../models/users.js";
 import {Msg} from "../models/msg.js";
+import { Produit } from "../models/produits.js";
 
 export const addMessage = async(req , res)=>{
     const content = req.body;
     const user = req.params.id;
     const to = req.params.idtouser;
+    const product = req.params.idproduct;
     
 try{
     
@@ -17,10 +19,14 @@ try{
 
     try{
     await User.findByIdAndUpdate(user , {
-        $push : {msg : messageEnvoyer._id+" "+user}
+        $push : {msg : messageEnvoyer._id}
     })
     await User.findByIdAndUpdate(to , {
-        $push : {msg : messageEnvoyer._id+" "+user}
+        $push : {msg : messageEnvoyer._id}
+    })
+
+    await Produit.findByIdAndUpdate(product , {
+        $push : {msgUser : user}
     })
    
     }catch(error){
@@ -45,7 +51,7 @@ export const getConversation = async (req , res)=>{
       const  list1 = userMessage.msg;
       const list2 = toUserMessage.msg ;
     //   res.status(200).json({list1 , list2})
-const list3 = []
+   const list3 = []
 
 
         for(let i=0 ; i<list1.length ; i++){

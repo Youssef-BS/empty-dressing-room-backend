@@ -33,6 +33,9 @@ const ProduitSchema = new mongoose.Schema(
   marque : {
     type :String , 
     required : true , 
+  },
+  msgUser : {
+    type : [String]
   }
   },
   { timestamps: true }
