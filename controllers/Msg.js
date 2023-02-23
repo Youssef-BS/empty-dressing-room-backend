@@ -26,7 +26,7 @@ try{
     })
 
     await Produit.findByIdAndUpdate(product , {
-        $push : {msgUser : user}
+        $push : {msgUser : messageEnvoyer._id}
     })
    
     }catch(error){
@@ -71,37 +71,8 @@ export const getConversation = async (req , res)=>{
     }
 }
 
-export const getConversationArticleforUser = async(req , res)=>{
+export const Notification = async(req , res) => {
    
-    const user = req.params.id;
-    const MyConversation = await User.findById(user);
-    const listProduit = []
-    const listUsers = []
-    const msgDispo = []
     
-
-try{
-
-    for(let i =0 ; i<MyConversation.produit.length ; i++){
-       const produit = await Produit.findById(MyConversation.produit[i]);
-       listProduit.push(produit.msgUser) //add produit in listProduit
-    }
-
-for( let i = 0 ; i<listProduit.length ; i++){
-const users = await User.findById(listProduit[i])
-if(users != null){
-    for(let j =0 ; j<users.msg.length ; j++){
-    msgDispo.push(await Msg.findById(users.msg[j]))
-}}
-}
-
-res.status(200).json(msgDispo)
-
-
-
-}catch(error) 
- {   
-    res.status(500).json({message : error.message})
- }
-
+  
 }
