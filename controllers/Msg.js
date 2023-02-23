@@ -70,3 +70,20 @@ export const getConversation = async (req , res)=>{
         res.status(500).json({message : error.message})
     }
 }
+
+export const getConversationArticleforUser = async(req , res)=>{
+   
+    const user = req.params.id;
+    const MyConversation = await User.findById(user);
+
+try{
+res.status(200).json(MyConversation)
+ 
+
+
+}catch(error) 
+ {   
+    res.status(500).json({message : error.message})
+ }
+
+}
