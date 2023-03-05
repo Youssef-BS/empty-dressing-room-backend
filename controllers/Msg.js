@@ -76,13 +76,18 @@ export const Notification = async (req, res) => {
 
     const id = req.params.id ;
     const myProduct = []
+    const userContact = []
     try{
     const Me = await User.findById(id); // Me
     if(Me.produit.length!=0){
         for(let i =0 ; i<Me.produit.length ; i++){
             const myproduct = await Produit.findById(Me.produit[i])
             const UserSendMe = myproduct.msgUser
-            myProduct.push({myproduct , UserSendMe})
+            for(let j=0 ; j<UserSendMe.length ; j++){
+                const userSendMe = await User.findById(UserSendMe[j])
+                userContact.push(userSendMe)
+            }
+            myProduct.push({myproduct , userContact})
         }
     }
     
