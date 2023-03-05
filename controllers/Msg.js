@@ -74,4 +74,21 @@ export const getConversation = async (req , res)=>{
 
 export const Notification = async (req, res) => {
 
+    const id = req.params.id ;
+    const myProduct = []
+    try{
+    const Me = await User.findById(id); // Me
+    if(Me.produit.length!=0){
+        for(let i =0 ; i<Me.produit.length ; i++){
+            const myproduct = await Produit.findById(Me.produit[i])
+            const UserSendMe = myproduct.msgUser
+            myProduct.push({myproduct , UserSendMe})
+        }
+    }
+    
+    res.status(200).json({myProduct})
+    
+}catch(error){
+        res.status(500).json({message : error.message})
+    }
 }
