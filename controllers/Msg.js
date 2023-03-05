@@ -73,34 +73,5 @@ export const getConversation = async (req , res)=>{
 }
 
 export const Notification = async (req, res) => {
-    const id = req.params.id;
-    const me = await User.findById(id);
-    const listMessage = [];
-    const listProduit = [];
-    const userSendMe = [];
-    const finalResult = []
-  
-    listMessage.push(me.msg);
-    for (let i = 0; i < me.produit.length; i++) {
-      const produit = await Produit.findById(me.produit[i]);
-      if (produit) {
-        listProduit.push(produit);
-        for (let j = 0; j < produit.msgUser.length; j++) {
-          const user = await User.findById(produit.msgUser[j]);
-          if (user) {
-            userSendMe.push(user);
-          }
-        }
-      }
-    }
 
-    for (let i = 0; i < userSendMe.msg.length; i++) {
-        for (let j = 0; j < userSendMe.msg.length; j++) {
-            if (me.msg.includes(userSendMe[i].msg[j])) {
-                finalResult.push(await Msg.findById(userSendMe[i].msg[j]))
-            }
-        }
-    }
-  
-    res.status(200).json(finalResult);
 }
