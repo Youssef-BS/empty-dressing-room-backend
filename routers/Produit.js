@@ -4,8 +4,10 @@ import { addProduct , getAllProduct ,
      getProductWomen,getProductKids ,
       getProductElectronique , getProductHome ,
        getProductAnimaux,selectProduct,
-       myProduits
+       myProduits,
+       deleteProduit
     } from "../controllers/Produits.js";
+    import { isAuthenticated } from "../middleware/verifyToken.js";
 
 
 const router = express.Router();
@@ -21,6 +23,7 @@ const router = express.Router();
  router.route("/animaux/accesoire").get(getProductAnimaux);
  router.route("/select/:idproduct").get(selectProduct);
  router.route("/myproduit/test/:id/:idproduct").get(myProduits);
+ router.route("/supprimer/:idproduct").delete(isAuthenticated , deleteProduit);
 
 
 export default router;

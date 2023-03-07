@@ -341,6 +341,21 @@ export const myProduits =async (req , res) =>{
 }
 
 
+export const deleteProduit = async(req , res)=>{
+  if(req.user.isAdmin){
+    const idProduct = req.params.idproduct;
+    try{
+    await Produit.findByIdAndDelete(idProduct)
+    res.status(200).json({message : "Produit supprimer"})
+    }catch(error){
+      res.status(500).json({message : error.message})
+    }
+  }
+  else{
+    res.status(500).json("you are not allowed")
+  }
+ 
+}
 
 
 
