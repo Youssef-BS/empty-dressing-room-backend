@@ -71,6 +71,8 @@ export const login = async (req , res) =>{
     res.status(500).json({message : error.message});
   }
 }
+// login admin
+
 
 
 //logout 
@@ -99,8 +101,9 @@ export const getUsres =  async (req, res) => {
 // delete users 
 
 export const deleteUser  = async (req , res) =>{
+if(req.user.isAdmin){
 
-  const id = req.params.id;
+const id = req.params.id;
 try{
 
 await User.findByIdAndDelete(id);
@@ -109,7 +112,11 @@ res.status(200).json({message : "utilisateur supprimer"});
 
 
 }catch(error){
-  res.status(500).json({message : error.message});
+res.status(500).json({message : error.message});
+}
+}
+else{
+  res.status(403).json("You are not allowed!");
 }
 }
 

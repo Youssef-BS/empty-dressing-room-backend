@@ -36,8 +36,13 @@ const ProduitSchema = new mongoose.Schema(
   },
   msgUser : {
     type : [String]
+  },
+  isFetch : {
+    type : Boolean ,
+    default : false,
   }
   },
+ 
   { timestamps: true }
 );
 

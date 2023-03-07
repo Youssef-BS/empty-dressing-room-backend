@@ -7,6 +7,7 @@ import { addProduct , getAllProduct ,
        myProduits
     } from "../controllers/Produits.js";
 
+
 const router = express.Router();
 
  router.route("/addproduct/:id").post(addProduct);
