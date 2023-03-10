@@ -1,11 +1,18 @@
 import  express from "express";
-import { addProduct , getAllProduct ,
-     getProductUser , getProductMen ,
-     getProductWomen,getProductKids ,
-      getProductElectronique , getProductHome ,
-       getProductAnimaux,selectProduct,
-       myProduits,
-       deleteProduit
+import { addProduct ,
+     getAllProduct ,
+     getProductUser ,
+     getProductMen ,
+     getProductWomen,
+     getProductKids ,
+     getProductElectronique , 
+     getProductHome ,
+     getProductAnimaux,
+     selectProduct,
+     myProduits,
+     deleteProduit,
+     updateProduit,
+     getAllproduitisNotFetched
     } from "../controllers/Produits.js";
     import { isAuthenticated } from "../middleware/verifyToken.js";
 
@@ -24,6 +31,8 @@ const router = express.Router();
  router.route("/select/:idproduct").get(selectProduct);
  router.route("/myproduit/test/:id/:idproduct").get(myProduits);
  router.route("/supprimer/:idproduct").delete(isAuthenticated , deleteProduit);
+ router.route("/update/:idproduct").put(isAuthenticated , updateProduit);
+ router.route("/notfetched/select").get(getAllproduitisNotFetched)
 
 
 export default router;

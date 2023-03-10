@@ -357,6 +357,37 @@ export const deleteProduit = async(req , res)=>{
  
 }
 
+export const updateProduit = async(req , res)=>{
+ if(req.user.isAdmin){
+const idproduct = req.params.idproduct ;
+  try{
+   const updateProduct = await Produit.findByIdAndUpdate(
+    idproduct
+    ,{
+      $set : req.body
+    },
+    {new : true}
+    );
+    res.status(200).json(updateProduct)
+  }catch(error){
+    res.status(500).json({message : error.message})
+  }
+}
+else{
+  res.status(403).json({message : "you are not alowed"})
+}
+}
+
+export const getAllproduitisNotFetched = async(req,res)=>{
+
+  try{
+    const notFetchedProducts = await Produit.find({ isFetch: false });
+    res.status(200).json(notFetchedProducts)
+  }catch(error){
+    res.status(500).json({message : error.message})
+  }
+
+}
 
 
 
