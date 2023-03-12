@@ -12,7 +12,8 @@ import { addProduct ,
      myProduits,
      deleteProduit,
      updateProduit,
-     getAllproduitisNotFetched
+     getAllproduitisNotFetched,
+     AcceptProduit
     } from "../controllers/Produits.js";
     import { isAuthenticated } from "../middleware/verifyToken.js";
 
@@ -33,6 +34,7 @@ const router = express.Router();
  router.route("/supprimer/:idproduct").delete(isAuthenticated , deleteProduit);
  router.route("/update/:idproduct").put(isAuthenticated , updateProduit);
  router.route("/notfetched/select").get(getAllproduitisNotFetched)
+ router.route("/acceptproduct/:idproduct").put(AcceptProduit);
 
 
 export default router;

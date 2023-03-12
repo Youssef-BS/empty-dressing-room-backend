@@ -389,6 +389,22 @@ export const getAllproduitisNotFetched = async(req,res)=>{
 
 }
 
+export const AcceptProduit = async (req, res) => {
+  try {
+    const idProduct = req.params.idproduct;
+    const accept = await Produit.findByIdAndUpdate(
+      idProduct,
+      { isFetch: true },
+      { new: true } // To return the updated document
+    );
+
+    res.status(200).json(accept);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+
 
 
 
