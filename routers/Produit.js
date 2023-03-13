@@ -13,7 +13,9 @@ import { addProduct ,
      deleteProduit,
      updateProduit,
      getAllproduitisNotFetched,
-     AcceptProduit
+     AcceptProduit,
+     getallProductTrue,
+     
     } from "../controllers/Produits.js";
     import { isAuthenticated } from "../middleware/verifyToken.js";
 
@@ -35,6 +37,7 @@ const router = express.Router();
  router.route("/update/:idproduct").put(isAuthenticated , updateProduit);
  router.route("/notfetched/select").get(getAllproduitisNotFetched)
  router.route("/acceptproduct/:idproduct").put(AcceptProduit);
+ router.route("/fetch/select").get(getallProductTrue);
 
 
 export default router;

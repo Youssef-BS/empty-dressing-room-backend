@@ -268,7 +268,7 @@ export const getProductHome = async (req , res)=>{
 }
 export const getProductAnimaux = async (req , res)=>{
   try {
-    const users = await User.find({}, { name: 1, photoP: 1, produit: 1 , categorie:1});
+    const users = await User.find({}, { name: 1, photoP: 1, produit: 1 , categorie:1 });
     const products = await Promise.all(
       users.map(user => {
         return Promise.all(
@@ -403,6 +403,15 @@ export const AcceptProduit = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+export const getallProductTrue = async(req , res)=>{
+try{
+const fetchProduct = await Produit.find({isFetch : true});
+res.status(200).json(fetchProduct);
+}catch(error){
+  res.status(500).json({message : error.message})
+}
+}
 
 
 
