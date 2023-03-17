@@ -51,38 +51,37 @@ export const addProduct= async (req , res)=>{
 
 }
 
-export const getAllProduct = async (req , res) =>{
-  
-    try {
-        const users = await User.find({}, { name: 1, photoP: 1, produit: 1 });
-        const products = await Promise.all(
-          users.map(user => {
-            return Promise.all(
-              user.produit.map(id => Produit.findById(id))
-            ).then(userProducts => {
-              return userProducts.map(product => ({
+export const getAllProduct = async (req, res) => {
+  try {
+    const users = await User.find({}, { name: 1, photoP: 1, produit: 1 });
+    const products = await Promise.all(
+      users.map((user) => {
+        return Promise.all(user.produit.map((id) => Produit.findById(id))).then(
+          (userProducts) => {
+            return userProducts
+              .filter((product) => product.isFetch) // filter by isFetch
+              .map((product) => ({
                 name: user.name,
                 photoP: user.photoP,
-                produit: product
+                produit: product,
               }));
-            });
-          })
+          }
         );
-        const flatProducts = products.reduce((acc, val) => acc.concat(val), []);
-    
-        for (let i = flatProducts.length - 1; i > 0; i--) {
-          const j = Math.floor(Math.random() * (i + 1));
-          [flatProducts[i], flatProducts[j]] = [flatProducts[j], flatProducts[i]];
-        }
-    
-        res.status(200).json(flatProducts);
-      } catch (error) {
-        res.status(500).json({ message: error.message });
-      }
-    
+      })
+    );
+    const flatProducts = products.reduce((acc, val) => acc.concat(val), []);
 
+    for (let i = flatProducts.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [flatProducts[i], flatProducts[j]] = [flatProducts[j], flatProducts[i]];
+    }
 
-}
+    res.status(200).json(flatProducts);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 
 export const getProductUser = async(req , res) =>{
 
@@ -413,11 +412,21 @@ res.status(200).json(fetchProduct);
 }
 }
 
+//delete item 
 
-
-
-
-
+export const deleteProduct = async (req, res) => {
+  const idProduct = req.params.idproduct;
+  const idUser = req.params.iduser;
+  try {
+    await Produit.findByIdAndDelete(idProduct);
+    const user = await User.findById(idUser);
+    user.produit = user.produit.filter((productId) => productId !== idProduct);
+    await user.save();
+    res.status(200).json("product deleted");
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
 
 
 
