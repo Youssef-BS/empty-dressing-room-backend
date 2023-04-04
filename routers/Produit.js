@@ -10,12 +10,14 @@ import { addProduct ,
      getProductAnimaux,
      selectProduct,
      myProduits,
-     deleteProduit,
      updateProduit,
      getAllproduitisNotFetched,
      AcceptProduit,
      getallProductTrue,
      deleteProduct,
+     deletethisProduct,
+     deleteMyProduct,
+     updateMyProduct,
      
     } from "../controllers/Produits.js";
     import { isAuthenticated } from "../middleware/verifyToken.js";
@@ -34,12 +36,14 @@ const router = express.Router();
  router.route("/animaux/accesoire").get(getProductAnimaux);
  router.route("/select/:idproduct").get(selectProduct);
  router.route("/myproduit/test/:id/:idproduct").get(myProduits);
-//  router.route("/supprimer/:idproduct").delete(isAuthenticated , deleteProduit);
- router.route("/update/:idproduct").put(isAuthenticated , updateProduit);
+ router.route("/update/:idproduct").put(updateProduit);
  router.route("/notfetched/select").get(getAllproduitisNotFetched)
  router.route("/acceptproduct/:idproduct").put(AcceptProduit);
  router.route("/fetch/select").get(getallProductTrue);
  router.route("/deleteproduct/:iduser/:idproduct").delete(deleteProduct);
+ router.route("/deletethisproduct/:idproduct").delete(deletethisProduct);
+ router.route("/deletemyproduct/:id/:idproduct").delete(deleteMyProduct);
+ router.route("/updatemyproduct/:id/:idproduct").put(updateMyProduct);
 
 
 export default router;

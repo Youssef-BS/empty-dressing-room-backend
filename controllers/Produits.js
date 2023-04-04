@@ -14,7 +14,7 @@ export const addProduct= async (req , res)=>{
         const categorie = categories + " " +email+Math.floor(Math.random() * 40251) ; 
         const mycloud =  await cloudinary.v2.uploader.upload(photoProduit , {
             folder : "todoApp"
-        });
+        });  
         
         fs.rmSync("./tmp" , {recursive : true});
   
@@ -357,7 +357,7 @@ export const deleteProduit = async(req , res)=>{
 }
 
 export const updateProduit = async(req , res)=>{
- if(req.user.isAdmin){
+//  if(req.user.isAdmin){
 const idproduct = req.params.idproduct ;
   try{
    const updateProduct = await Produit.findByIdAndUpdate(
@@ -372,10 +372,10 @@ const idproduct = req.params.idproduct ;
     res.status(500).json({message : error.message})
   }
 }
-else{
-  res.status(403).json({message : "you are not alowed"})
-}
-}
+// else{
+//   res.status(403).json({message : "you are not alowed"})
+// }
+// }
 
 export const getAllproduitisNotFetched = async(req,res)=>{
 
@@ -428,5 +428,87 @@ export const deleteProduct = async (req, res) => {
   }
 };
 
+
+export const deletethisProduct = async (req, res) => {
+  const idProduct = req.params.idproduct;
+  try {
+    // Find the product by id and get its produit field
+    const product = await Produit.findById(idProduct);
+    const productId = product._id.toString();
+
+    // Update all the users who have this product id in their produit array
+    await User.updateMany(
+      { produit: productId },
+      { $pull: { produit: productId } }
+    );
+
+    // Delete the product
+    await Produit.findByIdAndDelete(idProduct);
+
+    res.status(200).json({ message: "product deleted" });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+
+export const deleteMyProduct = async (req, res) => {
+  const idProduct = req.params.idproduct;
+  const id = req.params.id;
+  try {
+    const product = await Produit.findById(idProduct);
+    const productId = product._id.toString();
+    const Me = await User.findById(id);
+    let productIndex = -1;
+    for (let i = 0; i < Me.produit.length; i++) {
+      if (idProduct === Me.produit[i]) {
+        productIndex = i;
+        break;
+      }
+    }
+    if (productIndex !== -1) {
+      await Produit.findByIdAndDelete(idProduct);
+      Me.produit.splice(productIndex, 1);
+      await Me.save();
+      res.status(200).json({ message: "Product deleted" });
+    } else {
+      res.status(404).json({ message: "Product not found" });
+    }
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+
+export const updateMyProduct = async (req , res)=>{
+  const id = req.params.id;
+  const idProduct = req.params.idproduct;
+try{
+const Me = await User.findById(id);
+let fetch = -1 ; 
+for(let i =0 ; i<Me.produit.length ; i++){
+  if(Me.produit[i] === idProduct){
+    fetch = i ;
+    break ;
+  }
+}
+  if(fetch != -1){
+  
+      const updateProduct = await Produit.findByIdAndUpdate(
+        idProduct
+       ,{
+         $set : req.body
+       },
+       {new : true}
+       );
+       res.status(200).json(updateProduct)
+ 
+} else {
+  res.status(404).json({message : "product not found"})
+}
+}catch(error){
+  res.status(500).json({message : error.message})
+}
+}
 
 
