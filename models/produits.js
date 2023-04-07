@@ -12,7 +12,7 @@ const ProduitSchema = new mongoose.Schema(
     },
     price: {
       type: Number,
-      required: true,
+      required : true,
     },
     categorie: {
       type: String,
@@ -44,11 +44,8 @@ const ProduitSchema = new mongoose.Schema(
  
   typeP : {
     type : String ,
+    required : true
   } ,
-  
-  points : {
-    type : Number,
-  }
    
   },
 

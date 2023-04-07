@@ -9,7 +9,7 @@ export const addProduct= async (req , res)=>{
         var  email =  Math.floor(Math.random() * 40251);
         const user = req.params.id;    
         
-        const { title , taille  , marque , price , categories , desc } = req.body;
+        const { title , taille  , marque , price , categories , desc , typeP} = req.body;
         const photoProduit = req.files.photoProduit.tempFilePath;
         const categorie = categories + " " +email+Math.floor(Math.random() * 40251) ; 
         const mycloud =  await cloudinary.v2.uploader.upload(photoProduit , {
@@ -26,6 +26,7 @@ export const addProduct= async (req , res)=>{
         price,
         categorie,
         desc,
+        typeP,
         photoProduit :{
             url: mycloud.secure_url,
           },
