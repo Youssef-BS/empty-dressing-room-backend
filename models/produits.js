@@ -40,8 +40,18 @@ const ProduitSchema = new mongoose.Schema(
   isFetch : {
     type : Boolean ,
     default : false,
-  }
   },
+ 
+  typeP : {
+    type : String ,
+  } ,
+  
+  points : {
+    type : Number,
+  }
+   
+  },
+
  
   { timestamps: true }
 );
