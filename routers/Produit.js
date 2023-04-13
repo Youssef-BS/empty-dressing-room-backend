@@ -18,6 +18,7 @@ import { addProduct ,
      deletethisProduct,
      deleteMyProduct,
      updateMyProduct,
+     acheterProduitPoints
      
     } from "../controllers/Produits.js";
     import { isAuthenticated } from "../middleware/verifyToken.js";
@@ -44,6 +45,7 @@ const router = express.Router();
  router.route("/deletethisproduct/:idproduct").delete(deletethisProduct);
  router.route("/deletemyproduct/:id/:idproduct").delete(deleteMyProduct);
  router.route("/updatemyproduct/:id/:idproduct").put(updateMyProduct);
+ router.route("/acheterproduitpoints/:idvendeur/:idclient/:idproduit").put(acheterProduitPoints);
 
 
 export default router;
