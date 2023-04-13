@@ -46,6 +46,12 @@ const ProduitSchema = new mongoose.Schema(
     type : String ,
     required : true
   } ,
+  
+  vende : {
+    type : Boolean ,
+    dafault : false,
+  }
+
    
   },
 

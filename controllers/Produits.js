@@ -512,6 +512,7 @@ for(let i =0 ; i<Me.produit.length ; i++){
 }
 }
 
+// achter produit avec des points
 
 export const acheterProduitPoints = async (req , res) =>{
   const idVandeur = req.params.idvendeur;
@@ -530,11 +531,19 @@ if(client.points>=produit.price){
   },
   {new : true}
    )
-  await User.findByIdAndUpdate(idVandeur , {
+  
+   await User.findByIdAndUpdate(idVandeur , {
     points : vendeur.points + produit.price ,
   },
   {new : true}
-  ) 
+  )
+  
+  await Produit.findByIdAndUpdate(idProduit , {
+    vende : true ,
+  },
+  {new : true}
+  )
+  
 res.status(200).json({message :"vous avez acheter ce produit"})
 }
 
@@ -547,3 +556,16 @@ else {
 }
 }
 
+
+//afficher les produit vendre
+
+export const afficheProduitVendre = async (req , res)=>{
+  try{
+  
+   const produitVendre = await Produit.find({vende : true})
+   res.status(200).json(produitVendre)
+      
+  }catch(error){
+    res.status(500).json({message : error.message})
+  }
+}
