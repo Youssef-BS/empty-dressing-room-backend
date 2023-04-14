@@ -120,7 +120,7 @@ export const getProductMen = async (req , res)=>{
       })
     );
     const flatProducts = products.reduce((acc, val) => acc.concat(val), []);
-    const filteredProducts = flatProducts.filter(product => product.categorie === "hommes");
+    const filteredProducts = flatProducts.filter(product => product.categorie === "hommes" && product.produit.isFetch === true);
 
     for (let i = filteredProducts.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
@@ -153,7 +153,7 @@ export const getProductWomen = async (req , res)=>{
       })
     );
     const flatProducts = products.reduce((acc, val) => acc.concat(val), []);
-    const filteredProducts = flatProducts.filter(product => product.categorie === "femmes");
+    const filteredProducts = flatProducts.filter(product => product.categorie === "femmes" && product.produit.isFetch === true);
 
     for (let i = filteredProducts.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
@@ -186,7 +186,7 @@ export const getProductKids = async (req , res)=>{
       })
     );
     const flatProducts = products.reduce((acc, val) => acc.concat(val), []);
-    const filteredProducts = flatProducts.filter(product => product.categorie === "enfants");
+    const filteredProducts = flatProducts.filter(product => product.categorie === "enfants" && product.produit.isFetch === true);
 
     for (let i = filteredProducts.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
@@ -219,7 +219,7 @@ export const getProductElectronique = async (req , res)=>{
       })
     );
     const flatProducts = products.reduce((acc, val) => acc.concat(val), []);
-    const filteredProducts = flatProducts.filter(product => product.categorie === "electroniques");
+    const filteredProducts = flatProducts.filter(product => product.categorie === "electroniques" && product.produit.isFetch === true);
 
     for (let i = filteredProducts.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
@@ -286,7 +286,7 @@ export const getProductAnimaux = async (req , res)=>{
       })
     );
     const flatProducts = products.reduce((acc, val) => acc.concat(val), []);
-    const filteredProducts = flatProducts.filter(product => product.categorie === "animaux");
+    const filteredProducts = flatProducts.filter(product => product.categorie === "animaux" && product.produit.isFetch === true);
 
     for (let i = filteredProducts.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
