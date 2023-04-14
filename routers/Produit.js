@@ -47,7 +47,7 @@ const router = express.Router();
  router.route("/deletemyproduct/:id/:idproduct").delete(deleteMyProduct);
  router.route("/updatemyproduct/:id/:idproduct").put(updateMyProduct);
  router.route("/acheterproduitpoints/:idvendeur/:idclient/:idproduit").put(acheterProduitPoints);
- router.route("/afficheproduitvende/vendre").get(afficheProduitVendre)
+ router.route("/afficheproduitvende/vendre").get(afficheProduitVendre);
 
 
 export default router;

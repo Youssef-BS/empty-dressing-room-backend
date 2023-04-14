@@ -557,6 +557,26 @@ else {
 }
 
 
+// vende 
+
+export const vende = async (req ,res) => {
+  
+  try{
+  const idProduct = req.params.idproduct;
+  
+  await Produit.findByIdAndUpdate(idProduct,{
+    vende : true ,
+  },{new : true})
+ 
+  res.status(200).json({message : "produit acheter"})
+  }catch(error){
+    res.status(500).json({message : error.message})
+  }
+  
+
+}
+
+
 //afficher les produit vendre
 
 export const afficheProduitVendre = async (req , res)=>{
@@ -569,3 +589,4 @@ export const afficheProduitVendre = async (req , res)=>{
     res.status(500).json({message : error.message})
   }
 }
+
