@@ -253,19 +253,20 @@ export const getProductHome = async (req , res)=>{
       })
     );
     const flatProducts = products.reduce((acc, val) => acc.concat(val), []);
-    const filteredProducts = flatProducts.filter(product => product.categorie === "maison");
-
+   
+    const filteredProducts = flatProducts.filter(product => product.categorie === "maison" && product.produit.isFetch === true);
+    
     for (let i = filteredProducts.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
       [filteredProducts[i], filteredProducts[j]] = [filteredProducts[j], filteredProducts[i]];
     }
-    
+  
     res.status(200).json(filteredProducts);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
-
 }
+
 export const getProductAnimaux = async (req , res)=>{
   try {
     const users = await User.find({}, { name: 1, photoP: 1, produit: 1 , categorie:1 });
