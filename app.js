@@ -28,4 +28,4 @@ app.use(
 app.use("/api/users" , User);
 app.use("/api/produits" , Produit);
 app.use("/api/msg" , Msg);
-app.use("/api/" , Payment);
+app.use("/api/payment" , Payment);
