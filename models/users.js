@@ -35,7 +35,10 @@ const userSchema = new mongoose.Schema({
     points : {
         type : Number,
         default : 0,
-    }
+    },
+    payment:{
+       type:[String]
+    },
       
 }
 )

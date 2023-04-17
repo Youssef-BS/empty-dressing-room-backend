@@ -5,6 +5,7 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import fileUpload from "express-fileupload";
 import  Msg  from "./routers/Msg.js";
+import Payment from "./routers/Payment.js";
 
 export const app = express();
 
@@ -27,3 +28,4 @@ app.use(
 app.use("/api/users" , User);
 app.use("/api/produits" , Produit);
 app.use("/api/msg" , Msg);
+app.use("/api/" , Payment);
