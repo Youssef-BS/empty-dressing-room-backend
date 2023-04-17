@@ -515,47 +515,47 @@ for(let i =0 ; i<Me.produit.length ; i++){
 
 // achter produit avec des points
 
-export const acheterProduitPoints = async (req , res) =>{
-  const idVandeur = req.params.idvendeur;
-  const idClient = req.params.idclient;
-  const idProduit = req.params.idproduit ;
+// export const acheterProduitPoints = async (req , res) =>{
+//   const idVandeur = req.params.idvendeur;
+//   const idClient = req.params.idclient;
+//   const idProduit = req.params.idproduit ;
 
-  const vendeur = await User.findById(idVandeur);
-  const client = await User.findById(idClient);
-  const produit = await Produit.findById(idProduit);
-  try{
+//   const vendeur = await User.findById(idVandeur);
+//   const client = await User.findById(idClient);
+//   const produit = await Produit.findById(idProduit);
+//   try{
 
-if(client.points>=produit.price){
+// if(client.points>=produit.price){
 
-   await User.findByIdAndUpdate(idClient , {
-    points : client.points-produit.price
-  },
-  {new : true}
-   )
+//    await User.findByIdAndUpdate(idClient , {
+//     points : client.points-produit.price
+//   },
+//   {new : true}
+//    )
   
-   await User.findByIdAndUpdate(idVandeur , {
-    points : vendeur.points + produit.price ,
-  },
-  {new : true}
-  )
+//    await User.findByIdAndUpdate(idVandeur , {
+//     points : vendeur.points + produit.price ,
+//   },
+//   {new : true}
+//   )
   
-  await Produit.findByIdAndUpdate(idProduit , {
-    vende : true ,
-  },
-  {new : true}
-  )
+//   await Produit.findByIdAndUpdate(idProduit , {
+//     vende : true ,
+//   },
+//   {new : true}
+//   )
   
-res.status(200).json({message :"vous avez acheter ce produit"})
-}
+// res.status(200).json({message :"vous avez acheter ce produit"})
+// }
 
-else {
-  res.status(200).json({message : "vous n'avais pas le prix pour ce produit"})
-}
+// else {
+//   res.status(200).json({message : "vous n'avais pas le prix pour ce produit"})
+// }
 
-}catch(error){
-  res.status(500).json({message : error.message})
-}
-}
+// }catch(error){
+//   res.status(500).json({message : error.message})
+// }
+// }
 
 
 // vende 
