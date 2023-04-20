@@ -7,8 +7,10 @@ export const ajouterCommandePoints = async (req , res)=>{
      const idClient = req.params.idclient;
      const idVandeur = req.params.idvendeur;
      const idProduit = req.params.idproduit;  
-    const vendeur = await User.findById(idVandeur);
+   
+  
     const client = await User.findById(idClient);
+    const vendeur = await User.findById(idVandeur);
     const produit = await Produit.findById(idProduit);
 
     if(client.points>=produit.price){
@@ -39,13 +41,12 @@ export const ajouterCommandePoints = async (req , res)=>{
     }catch(error){
         res.status(500).json({message: error.message});
     }
-
-}
+   
     res.status(200).json({message : "success"});
-     
-     
-
-    }catch(error){
+} else {
+    res.status(402).json({message : "Vous n'avez pas assez de points"});
+}
+ }catch(error){
         res.status(500).json({message: error.message});
     }
 }
