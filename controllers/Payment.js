@@ -50,3 +50,24 @@ export const ajouterCommandePoints = async (req , res)=>{
         res.status(500).json({message: error.message});
     }
 }
+
+//get liste commande
+
+export const getMyCommande = async (req, res)=>{
+    try{
+      const id = req.params.id;
+      const Me = await User.findById(id);
+    const allMyCommands = [];
+    if(Me.payment.length<0){
+        res.status(402).json({message : "Vous n'avez pas assez de commandes"});
+    } else {
+      for(let i=0 ; i<Me.payment.length ; i++){
+    const commande = await Payment.findById(Me.payment[i].split(' ')[0]);
+    allMyCommands.push(commande);
+    }
+    res.status(200).json(allMyCommands);
+    }
+    }catch(error){
+        res.status(500).json({message: error.message});
+    }
+}
