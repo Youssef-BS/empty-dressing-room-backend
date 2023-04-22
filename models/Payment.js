@@ -18,6 +18,9 @@ const PaymentSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
+    produit: {
+      type : [String],
+    }
 },
 { timestamps: true }
 );

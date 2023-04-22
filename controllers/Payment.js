@@ -17,7 +17,7 @@ export const ajouterCommandePoints = async (req , res)=>{
      
     const {ville , numRue , adresseLigne2 , codePoastal} = req.body;
     
-    const newPayment = new Payment({ville, numRue, adresseLigne2, codePoastal}); 
+    const newPayment = new Payment({ville, numRue, adresseLigne2, codePoastal , produit : idProduit}); 
     const payment = await newPayment.save();
     await User.findByIdAndUpdate(idClient , {
         points : client.points-produit.price
@@ -34,10 +34,20 @@ export const ajouterCommandePoints = async (req , res)=>{
       },
       {new : true}
       )
+    // try{
+    //   await Payment.findByIdAndUpdate(idProduit , {
+    //     $push : {produit : produit._id}
+    // },
+    // {new : true}
+    // )}
+    // catch(error){
+    //     res.status(500).json({message: error.message});
+    // }
     try{
     await User.findByIdAndUpdate(idClient , {
-        $push : {payment : payment._id+" "+produit._id}
+        $push : {payment : payment._id+" "+produit._id} 
     })
+  
     }catch(error){
         res.status(500).json({message: error.message});
     }
