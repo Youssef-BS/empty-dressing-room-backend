@@ -34,15 +34,6 @@ export const ajouterCommandePoints = async (req , res)=>{
       },
       {new : true}
       )
-    // try{
-    //   await Payment.findByIdAndUpdate(idProduit , {
-    //     $push : {produit : produit._id}
-    // },
-    // {new : true}
-    // )}
-    // catch(error){
-    //     res.status(500).json({message: error.message});
-    // }
     try{
     await User.findByIdAndUpdate(idClient , {
         $push : {payment : payment._id+" "+produit._id} 
@@ -68,14 +59,24 @@ export const getMyCommande = async (req, res)=>{
       const id = req.params.id;
       const Me = await User.findById(id);
     const allMyCommands = [];
+    var s = 0;
+    const produits = [];
     if(Me.payment.length<0){
         res.status(402).json({message : "Vous n'avez pas assez de commandes"});
     } else {
       for(let i=0 ; i<Me.payment.length ; i++){
+
     const commande = await Payment.findById(Me.payment[i].split(' ')[0]);
+    s+=1;
     allMyCommands.push(commande);
     }
-    res.status(200).json(allMyCommands);
+    
+    for(let i =0 ; i<allMyCommands.length ; i++){
+        const produit = await Produit.findById(allMyCommands[i].produit);
+        produits.push(produit);
+    }
+
+    res.status(200).json({allMyCommands , produits} );
     }
     }catch(error){
         res.status(500).json({message: error.message});
