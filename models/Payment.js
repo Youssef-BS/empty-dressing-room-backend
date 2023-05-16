@@ -23,6 +23,10 @@ const PaymentSchema = new mongoose.Schema(
     },
     user : {
       type : String,
+    },
+    isST:{
+      type : Boolean,
+      default : false,
     }
 },
 { timestamps: true }

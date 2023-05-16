@@ -84,6 +84,8 @@ export const getMyCommande = async (req, res)=>{
 }
 
 
+
+
 export const getAllCommands = async (req, res)=>{
   try{
     const allMyCommands = await Payment.find();
@@ -91,7 +93,15 @@ export const getAllCommands = async (req, res)=>{
     for(let i=0; i<allMyCommands.length; i++){
      const user = await User.findById(allMyCommands[i].user);
      const commande = await Produit.findById(allMyCommands[i].produit);
-     command.push({user,commande});
+     for(let j=0; j<user.payment.length; j++){
+      if(user.payment[j].split(" ")[0]==allMyCommands[j]._id){
+        const myc = await Payment.findById(allMyCommands[j]._id);
+        command.push({user,commande ,myc});
+        break;
+        
+      }
+     }
+    
     }
     res.status(200).json(command);
 
@@ -101,5 +111,22 @@ export const getAllCommands = async (req, res)=>{
     }
 
 }
+
+export const produitArrive = async (req , res)=>{
+  try{
+   const idCommande = req.params.id;
+    
+   await Payment.findByIdAndUpdate(idCommande , {
+    isST : true,
+   },{new : true}
+   )
+
+   res.status(200).json({message : "produit arrive"});
+
+  }catch(error){
+    res.status(500).json({message: error.message});
+  }
+}
+
 
 
