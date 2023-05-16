@@ -12,6 +12,7 @@ export const sendToken = (res, user, statusCode, message) => {
       photoP: user.photoP,
       produits: user.produits,
       admin: user.isAdmin,
+      mymsg : user.mymsg
     };
   
     res

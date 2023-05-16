@@ -39,6 +39,9 @@ const router = express.Router();
  router.route("/select/:idproduct").get(selectProduct);
  router.route("/myproduit/test/:id/:idproduct").get(myProduits);
  router.route("/update/:idproduct").put(updateProduit);
+
+
+ 
  router.route("/notfetched/select").get(getAllproduitisNotFetched)
  router.route("/acceptproduct/:idproduct").put(AcceptProduit);
  router.route("/fetch/select").get(getallProductTrue);

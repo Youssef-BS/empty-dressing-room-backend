@@ -17,7 +17,7 @@ export const ajouterCommandePoints = async (req , res)=>{
      
     const {ville , numRue , adresseLigne2 , codePoastal} = req.body;
     
-    const newPayment = new Payment({ville, numRue, adresseLigne2, codePoastal , produit : idProduit}); 
+    const newPayment = new Payment({ville, numRue, adresseLigne2, codePoastal , produit : idProduit , user : idClient}); 
     const payment = await newPayment.save();
     await User.findByIdAndUpdate(idClient , {
         points : client.points-produit.price
@@ -76,9 +76,30 @@ export const getMyCommande = async (req, res)=>{
         produits.push(produit);
     }
 
-    res.status(200).json({allMyCommands , produits} );
+    res.status(200).json({allMyCommands , produits , s} );
     }
     }catch(error){
         res.status(500).json({message: error.message});
     }
 }
+
+
+export const getAllCommands = async (req, res)=>{
+  try{
+    const allMyCommands = await Payment.find();
+    const command = [];
+    for(let i=0; i<allMyCommands.length; i++){
+     const user = await User.findById(allMyCommands[i].user);
+     const commande = await Produit.findById(allMyCommands[i].produit);
+     command.push({user,commande});
+    }
+    res.status(200).json(command);
+
+
+}catch(error){
+        res.status(500).json({message: error.message});
+    }
+
+}
+
+

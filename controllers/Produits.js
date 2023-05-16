@@ -544,19 +544,16 @@ export const afficheProduitVendre = async (req , res)=>{
   }
 }
 
+
 export const rechercher = async (req ,res)=>{
   try {
     const { q } = req.query;
-
-    // Construct the MongoDB query...
     const searchQuery = {
       $or: [
         { title: { $regex: `.*${q}.*`, $options: 'i' } },
         { desc: { $regex: `.*${q}.*`, $options: 'i' } },
       ],
     };
-
-    // Execute the query and return the results...
     const results = await Produit.find(searchQuery).exec();
     res.status(200).json(results);
   } catch (err) {

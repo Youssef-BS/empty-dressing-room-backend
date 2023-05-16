@@ -39,7 +39,7 @@ const userSchema = new mongoose.Schema({
     payment:{
        type:[String]
     },
-      
+          
 }
 )
 

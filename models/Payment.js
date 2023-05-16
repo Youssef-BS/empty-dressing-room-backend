@@ -20,6 +20,9 @@ const PaymentSchema = new mongoose.Schema(
     },
     produit: {
       type : String,
+    },
+    user : {
+      type : String,
     }
 },
 { timestamps: true }

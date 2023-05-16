@@ -13,14 +13,16 @@ export const addMessage = async (req, res) => {
   
       const NewMessage = new Msg(content);
       const messageEnvoyer = await NewMessage.save();
+      
+
       res.status(200).json(messageEnvoyer);
   
       try {
         await User.findByIdAndUpdate(user, {
-          $push: { msg: messageEnvoyer._id },
+          $push: { msg: messageEnvoyer._id+" "+user},
         });
         await User.findByIdAndUpdate(to, {
-          $push: { msg: messageEnvoyer._id },
+          $push: { msg: messageEnvoyer._id+" "+user },
         });
   
         const index = productFind.msgUser.indexOf(user);
@@ -49,23 +51,31 @@ export const getConversation = async (req , res)=>{
         const userMessage =await User.findById(user);
         const toUserMessage = await User.findById(to);
 
-      const  list1 = userMessage.msg;
+      const list1 = userMessage.msg;
       const list2 = toUserMessage.msg ;
+      var Me = false;
+      
     //   res.status(200).json({list1 , list2})
    const list3 = []
 
 
         for(let i=0 ; i<list1.length ; i++){
         for(let j= 0 ; j<list2.length ; j++){
-            if(list1[i]===list2[j]){
-                const conversation = await Msg.findById(list1[i])
-                list3.push(conversation.content)
+            if(list1[i].split(" ")[0]===list2[j].split(" ")[0]){
+              if(list1[i].split(" ")[1] === user){
+                Me=true;
+              }
+              else{
+                Me=false;
+              }
+                const conversation = await Msg.findById(list1[i].split(" ")[0]);
+                list3.push({conversation,Me});
                 // res.status(500).json(conversation.content)
+           }
+        }
+      }
                 
-            }
-        }
-        }
-        res.status(200).json(list3)
+         res.status(200).json(list3)
         
         }catch(error){
         res.status(500).json({message : error.message})
@@ -97,3 +107,4 @@ export const Notification = async (req, res) => {
         res.status(500).json({message : error.message})
     }
 }
+
