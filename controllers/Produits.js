@@ -545,19 +545,36 @@ export const afficheProduitVendre = async (req , res)=>{
 }
 
 
-export const rechercher = async (req ,res)=>{
+export const rechercher = async (req, res) => {
   try {
     const { q } = req.query;
+    const users = await User.find();
+    const all = [];
     const searchQuery = {
       $or: [
-        { title: { $regex: `.*${q}.*`, $options: 'i' } },
-        { desc: { $regex: `.*${q}.*`, $options: 'i' } },
+        { title: { $regex: `.*${q}.*`, $options: "i" } },
+        { desc: { $regex: `.*${q}.*`, $options: "i" } },
       ],
     };
     const results = await Produit.find(searchQuery).exec();
-    res.status(200).json(results);
+
+    for (let i = 0; i < results.length; i++) {
+      for (let j = 0; j < users.length; j++) {
+        for (let k = 0; k < users[j].produit.length; k++) {
+          if (users[j].produit[k] == results[i]._id) {
+            const combinedObj = {
+              user: users[j],
+              produit: results[i],
+            };
+            all.push(combinedObj);
+          }
+        }
+      }
+    }
+
+    res.status(200).json(all);
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "An error occurred while searching for products" });
   }
-}
+};

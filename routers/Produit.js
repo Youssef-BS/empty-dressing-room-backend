@@ -51,6 +51,7 @@ const router = express.Router();
  router.route("/updatemyproduct/:id/:idproduct").put(updateMyProduct);
  router.route("/afficheproduitvende/vendre").get(afficheProduitVendre);
  router.route("/rechercherproduit/trouve").get(rechercher);
+ 
 
 
 export default router;
