@@ -578,3 +578,47 @@ export const rechercher = async (req, res) => {
     res.status(500).json({ message: "An error occurred while searching for products" });
   }
 };
+
+
+export const filter = async (req, res) => {
+  try {
+    const { price, size, marque, categorie } = req.query;
+    const users = await User.find();
+    const all = [];
+    let searchQuery = {};
+
+    if (price) {
+      searchQuery.price = { $gte: parseInt(price) };
+    }
+    if (size) {
+      searchQuery.taille = { $eq: size };
+    }
+    if (marque) {
+      searchQuery.marque = { $eq: marque };
+    }
+    if (categorie) {
+      searchQuery.categorie = { $regex: `^${categorie.split(' ')[0]}`, $options: 'i' };
+    }
+
+    const results = await Produit.find(searchQuery).exec();
+
+    for (let i = 0; i < results.length; i++) {
+      for (let j = 0; j < users.length; j++) {
+        for (let k = 0; k < users[j].produit.length; k++) {
+          if (users[j].produit[k].toString() === results[i]._id.toString()) {
+            const combinedObj = {
+              user: users[j],
+              produit: results[i],
+            };
+            all.push(combinedObj);
+          }
+        }
+      }
+    }
+
+    res.status(200).json(all);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'An error occurred while searching for products' });
+  }
+};
