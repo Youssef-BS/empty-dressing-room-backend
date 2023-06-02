@@ -32,13 +32,17 @@ const userSchema = new mongoose.Schema({
         type : Boolean,
         default : false,
     },
-    points : {
+    points:{
         type : Number,
         default : 0,
     },
     payment:{
        type:[String]
     },
+
+    stars : {
+        type : [String],
+    }
           
 }
 )

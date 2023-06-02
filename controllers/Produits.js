@@ -416,8 +416,7 @@ export const filter = async (req, res) => {
         }
       }
     }
-
-    res.status(200).json(all);
+   res.status(200).json(all);
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: 'An error occurred while searching for products' });

@@ -25,12 +25,12 @@ export const addMessage = async (req, res) => {
           $push: { msg: messageEnvoyer._id+" "+user },
         });
   
-        const index = productFind.msgUser.indexOf(user);
-        if (index === -1) {
-          await Produit.findByIdAndUpdate(product, {
-            $push: { msgUser: user },
-          });
-        }
+        // const index = productFind.msgUser.indexOf(user);
+        // if (index === -1) {
+        //   await Produit.findByIdAndUpdate(product, {
+        //     $push: { msgUser: user },
+        //   });
+        // }
   
       } catch (error) {
         res.status(500).json({ message: error.message });
@@ -108,3 +108,25 @@ export const Notification = async (req, res) => {
     }
 }
 
+export const gettwo = async (req, res) => {
+  try {
+    const users = [];
+    const id = req.params.id;
+    const user = await User.findById(id);
+
+    for (let i = 0; i < user.msg.length; i++) {
+      const messageId = user.msg[i].split(" ")[1];
+
+      // Check if the user with 'messageId' is already in the 'users' array
+      const existingUser = users.find((u) => u._id.toString() === messageId);
+      if (!existingUser && messageId !== id) {
+        const recepteur = await User.findById(messageId);
+        users.push(recepteur);
+      }
+    }
+
+    res.status(200).json(users);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};

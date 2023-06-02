@@ -1,4 +1,5 @@
 import { User } from "../models/users.js";
+import {Produit} from "../models/produits.js";
 import CryptoJS from "crypto-js"
 import { sendToken } from "../middleware/sendToken.js";
 import cloudinary from "cloudinary";
@@ -150,6 +151,88 @@ export const updateUser = async(req , res)=>{
     res.status(500).json({message : error.message});
   }
 }
+
+
+// get profile with product
+
+export const getPprofile = async(req , res)=>{
+  try{
+   
+    const product = [];
+    const id = req.params.id;
+    const Profile = await User.findById(id);
+    for(let i=0; i < Profile.produit.length ; i++){
+      const productS = await Produit.findById(Profile.produit[i]);
+      product.push(productS);
+    }
+    res.status(200).json({name : Profile.name, email : Profile.email , photo : Profile.photoP ,product : product});
+  }catch(error){
+    res.status(500).json({message : error.message});
+  }
+}
+
+// get all profile with product 
+export const getAllProfileWproduct = async (req, res) => {
+  try {
+    const users = await User.find();
+
+    const productsByUser = [];
+
+    for (let i = 0; i < users.length; i++) {
+      const user = users[i];
+      const products = [];
+
+      for (let j = 0; j < user.produit.length; j++) {
+        const product = await Produit.findById(user.produit[j]);
+        products.push(product);
+      }
+
+      productsByUser.push({ user, products });
+    }
+
+    res.status(200).json(productsByUser);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+}
+
+export const addStars = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const me = req.params.me;
+    const { star } = req.body;
+    const user = await User.findById(id);
+
+    let updated = false;
+
+    for (let i = 0; i < user.stars.length; i++) {
+      const entry = user.stars[i].split(" ");
+      if (entry[0] === me) {
+        entry[1] = star.toString();
+        user.stars[i] = entry.join(" ");
+        updated = true;
+        break;
+      }
+    }
+
+    if (!updated) {
+      user.stars.push(me + " " + star.toString());
+    }
+
+    await user.save();
+
+    let sum = 0;
+    for (let i = 0; i < user.stars.length; i++) {
+      sum += parseInt(user.stars[i].split(" ")[1]);
+    }
+
+    const average = sum / user.stars.length;
+
+    res.status(200).json({ user, average });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
 
 
 
