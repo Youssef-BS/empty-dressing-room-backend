@@ -3,39 +3,55 @@ import {Produit} from "../models/produits.js";
 import CryptoJS from "crypto-js"
 import { sendToken } from "../middleware/sendToken.js";
 import cloudinary from "cloudinary";
+import { sendMail } from "../middleware/sendMail.js";
 import fs from "fs";
+
 
 
 //register User
 export const register = async (req , res) =>{
   try {
     const {name,email,password} = req.body;
-    const photoP = req.files.photoP.tempFilePath;
+    const photoP = req.files.photoP.tempFilePath; //cloudinary
    
    
-    const user = await User.findOne({email}) ;
-    if(user) res.status(400).json({message : "Email Deja existe"});
-
+    let user = await User.findOne({email}) ;
+    if(user){
+      return res
+      .status(400)
+      .json({
+          success : false ,
+          message : "User already Exists"});
+  }
+    const otp = Math.floor(Math.random() * 100000); // code for verify mail
     const mycloud =  await cloudinary.v2.uploader.upload(photoP , {
       folder : "todoApp"
   });
   
-  fs.rmSync("./tmp" , {recursive : true});
+  fs.rmSync("./tmp" , {recursive : true}); // remove temporary
     
-    const newUser = new User({
+   user = await User.create({
         name,
         email,
         photoP :{
           url: mycloud.secure_url,
         },
-        
         password :  CryptoJS.AES.encrypt(
           password,
           "aazzee"
         ).toString(),
-      });    
-        const savedUser = await newUser.save();
-        res.status(201).json(savedUser);
+        otp,
+        otp_expiry: new Date(Date.now() + process.env.OTP_EXPIRE * 60 * 1000),
+        
+      });
+      await sendMail(email, "Verify your account", `Your OTP is ${otp}`);   
+      sendToken(
+        res ,
+        user ,
+        201 ,
+        "OTP sent to your email , Please verify your Account") 
+        // const savedUser = await newUser.save();
+        // res.status(201).json(savedUser);
       } catch (error) {
         res.status(500).json({message:error.message});
       }
@@ -47,11 +63,33 @@ export const register = async (req , res) =>{
 // });
 
 //login User with token and cookies
+export const verify = async (req , res)=>{
+  try{
+ const otp = Number(req.body.otp);
+
+ const user = await User.findById(req.user._id);
+
+ if(user.otp != otp || user.otp_expiry < Date.now()){
+ return res.status(400).json({success : false , message  : "Invalide OTP Or has been expired"})
+ }
+ 
+ user.verified = true;
+ user.otp = null ;
+ user.otp_expiry = null;
+
+ await user.save();
+ sendToken(res , user , 200 , "Account verified");
+
+  }catch(error){
+  res.status(500).json({success : false , message : error.message})
+  }
+}
+
+
 
 export const login = async (req , res) =>{
   try{
   const {email} = req.body; 
-
   let user = await User.findOne({email});
   if(!user) res.status(400).json({message : 'password ou email errone'});
   
@@ -66,7 +104,7 @@ export const login = async (req , res) =>{
 
 
     sendToken(res, user, 200, "Login Successful");
-  
+   
   
   }catch(error){
     res.status(500).json({message : error.message});
@@ -102,9 +140,9 @@ export const getUsres =  async (req, res) => {
 // delete users 
 
 export const deleteUser  = async (req , res) =>{
-if(req.user.isAdmin){
+   // admin
 
-const id = req.params.id;
+const id = req.params.id;  // id of the user
 try{
 
 await User.findByIdAndDelete(id);
@@ -115,16 +153,13 @@ res.status(200).json({message : "utilisateur supprimer"});
 }catch(error){
 res.status(500).json({message : error.message});
 }
-}
-else{
-  res.status(403).json("You are not allowed!");
-}
+
 }
 
 // get user 
 
 export const getUser = async (req , res)=>{
-  const id= req.params.id;
+  const id= req.params.id; // id of the user
 
   try{
   const user = await User.findById(id);
@@ -160,16 +195,17 @@ export const getPprofile = async(req , res)=>{
    
     const product = [];
     const id = req.params.id;
-    const Profile = await User.findById(id);
+    const Profile = await User.findById(id); 
     for(let i=0; i < Profile.produit.length ; i++){
       const productS = await Produit.findById(Profile.produit[i]);
       product.push(productS);
     }
-    res.status(200).json({name : Profile.name, email : Profile.email , photo : Profile.photoP ,product : product});
+    res.status(200).json({name : Profile.name, email : Profile.email , photo : Profile.photoP , stars : Profile.stars ,product : product});
   }catch(error){
     res.status(500).json({message : error.message});
   }
 }
+
 
 // get all profile with product 
 export const getAllProfileWproduct = async (req, res) => {
@@ -187,20 +223,29 @@ export const getAllProfileWproduct = async (req, res) => {
         products.push(product);
       }
 
-      productsByUser.push({ user, products });
+      let s = 0;
+      for (let k = 0; k < user.stars.length; k++) {
+        s = s + parseFloat(user.stars[k].split(" ")[1]);
+      }
+
+      const moyenne = user.stars.length !== 0 ? s / user.stars.length : 0;
+
+      productsByUser.push({ user, products, moyenne });
     }
 
     res.status(200).json(productsByUser);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
-}
+};
+
+
 
 export const addStars = async (req, res) => {
   try {
     const id = req.params.id;
     const me = req.params.me;
-    const { star } = req.body;
+    const star  = req.body.star;
     const user = await User.findById(id);
 
     let updated = false;
@@ -221,14 +266,7 @@ export const addStars = async (req, res) => {
 
     await user.save();
 
-    let sum = 0;
-    for (let i = 0; i < user.stars.length; i++) {
-      sum += parseInt(user.stars[i].split(" ")[1]);
-    }
-
-    const average = sum / user.stars.length;
-
-    res.status(200).json({ user, average });
+    res.status(200).json("good"+star);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

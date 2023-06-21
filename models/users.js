@@ -42,7 +42,16 @@ const userSchema = new mongoose.Schema({
 
     stars : {
         type : [String],
-    }
+    },
+    verified : {
+        type : Boolean,
+        default : false,
+      },
+            
+  otp: Number,
+  otp_expiry: Date,
+  resetPasswordOtp: Number,
+  resetPasswordOtpExpiry: Date,
           
 }
 )
@@ -54,5 +63,6 @@ userSchema.methods.getJWTToken = function () {
         admin : this.isAdmin,
   },"YSF",{expiresIn : "5d"});
   };
+userSchema.index({ otp_expiry: 1 }, { expireAfterSeconds: 0 });
 
 export const User = mongoose.model("User" , userSchema);

@@ -3,6 +3,7 @@ export const sendToken = (res, user, statusCode, message) => {
   
     const options = {
       httpOnly: true,
+      expires : new Date(Date.now() + process.env.JWT_COOKIE_EXPIRE * 24 * 60 * 60 * 1000),
     };
   
     const userData = {
@@ -12,7 +13,8 @@ export const sendToken = (res, user, statusCode, message) => {
       photoP: user.photoP,
       produits: user.produits,
       admin: user.isAdmin,
-      mymsg : user.mymsg
+      mymsg : user.mymsg,
+      verified : user.verified,
     };
   
     res
